@@ -31,6 +31,7 @@ Response (400 - Bad Request)
   "message": "<error message for 400>"
 }
 
+
 Response (401 - Unauthorized)
 {
   "message": "<error message for 401>"
