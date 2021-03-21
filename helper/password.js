@@ -6,6 +6,7 @@ hasshingPass = (password) =>{
 
 checkPass = (password,dbPassword)=>{
     return bcrypt.compareSync(password,dbPassword)
+    
 }
 
 module.exports = {

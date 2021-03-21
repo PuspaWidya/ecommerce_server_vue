@@ -3,8 +3,8 @@ let {Admin} = require('../models/index')
 
 let authenticate = async(req,res,next)=>{
     try{
-       let adminObj = jwt.verify(req.headers.acess_token,process.env.SECRET_KEY)
-        console.log(adminObj)
+       let adminObj = jwt.verify(req.headers.access_token,process.env.SECRET_KEY)
+        console.log(adminObj,'<<<')
 
         if(adminObj){
             let admin = await Admin.findOne({

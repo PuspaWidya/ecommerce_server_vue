@@ -19,7 +19,7 @@ const errorHandler = (err, req, res, next) => {
       })
     }else if (err.code === 404) {
       res.status(err.code).json({
-        message: 'Invalid email or'
+        message: 'Invalid email or password'
       })
     }else{
       res.status(500).json({

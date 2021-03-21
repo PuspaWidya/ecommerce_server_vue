@@ -1,5 +1,5 @@
 let { Admin } = require('../models/index')
-const {checkPass } = require('../helper/password')
+const { checkPass } = require('../helper/password')
 const jwt = require('jsonwebtoken')
 
 class AdminCont{
@@ -18,8 +18,7 @@ class AdminCont{
 
     static register = async (req,res,next)=> {
 
-        let{email, password} = req.body
-        let obj = {email,password}
+        let obj = {email,password,role}
 
         try{
             let newAdmin = await Admin.create(obj)
@@ -33,7 +32,8 @@ class AdminCont{
 
     static login = async(req,res,next) =>{
         let {email,password} = req.body
-
+        // console.log(req.body.email)
+        // console.log(req.body.password)
         try{
            let loginAdmin = await Admin.findOne({
                where : {
@@ -42,11 +42,12 @@ class AdminCont{
            })
            let check = checkPass(password,loginAdmin.password)
            if(check){
-                let objAdmin = jwt.sign({
+                let access_token = jwt.sign({
                     id:loginAdmin.id,
                     email : loginAdmin.email
                 },process.env.SECRET_KEY)
-                res.status(200).json(objAdmin)
+                // console.log(access_token,'<<<<')
+                res.status(200).json({access_token: access_token})
            }
            else{
                throw ({code : 401, message : 'invalid password or email'})

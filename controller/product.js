@@ -23,7 +23,6 @@ class ProductCont{
         try{
             let showProduct = await Product.findAll()
             res.status(200).json(showProduct)
-
         }
         catch(err){
             // console.log(err)
@@ -36,7 +35,7 @@ class ProductCont{
         let id = req.params.id
         let newBody = {
             name : req.body.name,
-            iamgeUrl :req.body.imageUrl,
+            imageUrl :req.body.imageUrl,
             price : req.body.price,
             stock : req.body.stock
             
@@ -50,15 +49,14 @@ class ProductCont{
             // res.send(err)
             next(err)
         }
-
     }
-
     static delete = async(req,res,next)=>{
         let id = req.params.id
 
         try{
             let data = await Product.findByPk(id)
             data.destroy()
+            console.log(id)
             res.status(200).json({message : 'data has been deleted'})
         }
         catch(err){
