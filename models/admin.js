@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Admin.belongsToMany(models.Product,{through:models.Cart,foreignKey:'AdminId'})
     }
   };
   Admin.init({
@@ -25,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     hooks:{
       beforeCreate(admin,opt){
         admin.password = hasshingPass(admin.password)
+        admin.role = 'customer'
       }
     }
   });
