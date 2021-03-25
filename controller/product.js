@@ -30,19 +30,31 @@ class ProductCont{
         }
     }
 
-    static editAll = async(req,res,next)=>{
+    static showOne = async (req,res,next) => {
+        try{
+            const id = req.params.id
 
-        let id = req.params.id
+            let product = await Product.findByPk(id)
+            res.status(200).json(product)
+
+        }
+        catch(err){
+            next(err)
+        }
+    }
+
+    static editAll = async(req,res,next)=>{
+        let id = +req.params.id
         let newBody = {
             name : req.body.name,
             imageUrl :req.body.imageUrl,
             price : req.body.price,
             stock : req.body.stock
-            
         }
         try{
             let editData = await Product.findByPk(id)
-            let newData = await editData.update({newBody})
+            // console.log(editData)
+            let newData = await editData.update(newBody)
             res.status(200).json(newData)
         }
         catch(err){
@@ -50,17 +62,17 @@ class ProductCont{
             next(err)
         }
     }
-    static delete = async(req,res,next)=>{
-        let id = req.params.id
-
+    
+    static destroy = async (req,res,next)=>{
         try{
+            let id = req.params.id
             let data = await Product.findByPk(id)
-            data.destroy()
+            await data.destroy()
             console.log(id)
             res.status(200).json({message : 'data has been deleted'})
         }
         catch(err){
-            // res.send(err)
+            console.log(err)
             next(err)
         }
     }

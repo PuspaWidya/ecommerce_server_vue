@@ -11,7 +11,6 @@ class AdminCont{
         catch(err){
             next(err)
         }
-
     }
 
     static register = async (req,res,next)=> {
@@ -43,7 +42,8 @@ class AdminCont{
            if(check){
                 let access_token = jwt.sign({
                     id:loginAdmin.id,
-                    email : loginAdmin.email
+                    email : loginAdmin.email,
+                    role: loginAdmin.role
                 },process.env.SECRET_KEY)
                 // console.log(access_token,'<<<<')
                 res.status(200).json({access_token: access_token})
@@ -59,11 +59,13 @@ class AdminCont{
 
     static addCart = async(req,res,next)=>{
         try{
+            // console.log('<<<<<<<<<<')
+            // console.log(req.body)
+            // console.log(req.params)
             let AdminId = req.admin.id
-            let ProductId = req.params.id
-            let amount = req.body.amount
+            let ProductId = +req.body.id
+            let amount = 1
             let obj = {AdminId,ProductId,amount}
-
             
             //update product stock
             let product = await Product.findOne({
@@ -71,9 +73,13 @@ class AdminCont{
                     id:ProductId
                 }
             })
+
             if(product.stock >= amount){
                 product.stock = product.stock - amount
                 await product.save()
+            }else{
+              
+                next({message : 'stock is not enough'})
             }
             
             let cart = await Cart.findOne({
@@ -99,20 +105,18 @@ class AdminCont{
         }
     }
 
-
     static showCart = async(req,res,next)=>{
         try{
-            let AdminId = req.admin.id
+            let adminId = req.admin.id
 
             let user = await Cart.findAll({
                 include:[Admin, Product],
                 order:[['id','ASC']],
                 where:{
-                    AdminId:AdminId
+                    AdminId:adminId
                 }
             })
             res.status(200).json(user)
-
         }
         catch(err){
             next(err)
@@ -122,7 +126,8 @@ class AdminCont{
 
     static removeCart = async(req,res,next)=>{
         try{
-            const id = req.params.id 
+            const {id, ProductId} = req.body //id cart & productId
+            //cek cart
             let removeCart = await Cart.findOne({
                 where:{
                     id : id
@@ -131,7 +136,12 @@ class AdminCont{
             if(!removeCart){
                 next({message:`You don't have the cart`})
             }else{
-                removeCart.destroy()
+                // cek product
+                let updateProduct = await Product.findByPk(ProductId)
+                updateProduct.stock = updateProduct.stock + removeCart.amount
+
+                await updateProduct.save()
+                await removeCart.destroy()
                 res.status(202).json({message:'Cart has been deleted'})
             }
         }
@@ -141,22 +151,25 @@ class AdminCont{
 
     }
 
-
-
     static updateCart = async(req,res,next)=>{
         try{
-            const {amount, ProductId} = req.body
-            const id = +req.params.id
-
+            const {amount, ProductId, id} = req.body
+            // const id = +req.params.id //id cart
+            
+            //cek product
             let product = await Product.findOne({
                 where:{
                     id:+ProductId
                 }
             })
-            if(product.stock < +amount){
+            //cek stock product
+            if(product.stock < +amount && product.stock <= 0){
                 console.log('stock kurang')
                 next({status:507, message: 'insufficient Stock'})
             }else{
+                // update product
+                product.stock = product.stock - amount
+                await product.save()
                 //update cart
                 let cart = await Cart.findOne({
                     where:{

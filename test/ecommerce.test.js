@@ -1,5 +1,14 @@
+const jwt = require('jsonwebtoken')
+
 const request = require('supertest');
 const app = require('../app')
+const user = {
+    email: 'admin@mail.com',
+    password: 1234,
+    role: 'admin'
+}
+
+let token = jwt.sign(user,'secret')
 
 
 //LOGIN
@@ -9,11 +18,14 @@ describe('login',function(){
 beforeAll(function(){
         
 })
+
+
 //CRUD
 //GET -> READ
 describe('GET/products',function(){
     it('should return 200 with data',function(done){
         request(app)
+        .set('access_token',token)
         .get('/products')
         .end((err,res)=>{
             if(err){

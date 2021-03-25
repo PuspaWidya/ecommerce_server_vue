@@ -4,20 +4,22 @@ let {Admin} = require('../models/index')
 let authenticate = async(req,res,next)=>{
     try{
        let adminObj = jwt.verify(req.headers.access_token,process.env.SECRET_KEY)
-        console.log(adminObj,'<<<')
 
         if(adminObj){
             let admin = await Admin.findOne({
                 where :{
                     id: adminObj.id,
-                    email : adminObj.email
+                    email : adminObj.email,
+                    role: adminObj.role
                 }
             })
             if(!admin){
                 throw({status : 401, message : 'Not authorized'})
+            }else{
+                console.log('authenticate masuk')
+                req.admin = adminObj
+                next()
             }
-            req.admin = adminObj
-            next()
         }else{
             throw({status : 401,message : 'email or password wrong'})
         }
