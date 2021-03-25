@@ -8,6 +8,8 @@ const authorize = require('../middleware/authorize')
 // router.get('/admin',user.read)
 router.post('/register',user.register)
 router.post('/login',user.login)
+router.get('/showProducts',product.show)
+
 router.use(authenticate)
 
 router.get('/server',user.showCart)
