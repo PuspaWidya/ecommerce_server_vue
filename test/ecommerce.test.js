@@ -3,13 +3,13 @@ const jwt = require('jsonwebtoken')
 const request = require('supertest');
 const app = require('../app')
 const user = {
+    id: 2,
     email: 'admin@mail.com',
     password: 1234,
     role: 'admin'
 }
 
-let token = jwt.sign(user,'secret')
-
+let token = jwt.sign(user,'top secret')
 
 //LOGIN
 describe('login',function(){
@@ -22,16 +22,19 @@ beforeAll(function(){
 
 //CRUD
 //GET -> READ
-describe('GET/products',function(){
+describe.only('GET/products',function(){
     it('should return 200 with data',function(done){
         request(app)
-        .set('access_token',token)
         .get('/products')
+        .set('access_token',token)
         .end((err,res)=>{
             if(err){
                 done(err)
             }else{
-                expect(res.status).toEqual(200)
+
+                console.log(res.body)
+            
+                // expect(res.status).toEqual(200)
                 // expect(Array.isArray(res.body)).toEqual(true)
                 // expect(res.body).toEqual("object")
                 expect(Array.isArray(res.body)).toBeTruthy()

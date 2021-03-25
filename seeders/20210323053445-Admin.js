@@ -16,7 +16,9 @@ module.exports = {
        {
          email : 'admin@mail.com',
          password : bycrypt.hashSync('1234',10),
-         role: 'admin'
+         role: 'admin',
+         createdAt :new Date(),
+         updatedAt: new Date()
         }
     ], {});
   },

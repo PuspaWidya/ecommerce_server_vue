@@ -5,7 +5,7 @@ const user = require('../controller/admin')
 const authenticate = require('../middleware/authenticate')
 const authorize = require('../middleware/authorize')
 
-router.get('/admin',user.read)
+// router.get('/admin',user.read)
 router.post('/register',user.register)
 router.post('/login',user.login)
 router.use(authenticate)
