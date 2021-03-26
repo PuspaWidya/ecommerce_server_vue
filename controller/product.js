@@ -22,11 +22,9 @@ class ProductCont{
     static show = async (req,res,next)=>{
         try{
             let showProduct = await Product.findAll()
-            console.log('<<<<<<<<<<')
             res.status(200).json(showProduct)
         }
         catch(err){
-            console.log(err)
             next(err)
         }
     }

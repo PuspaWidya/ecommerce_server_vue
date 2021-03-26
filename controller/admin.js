@@ -32,20 +32,23 @@ class AdminCont{
         let {email,password} = req.body
         // console.log(req.body.email)
         // console.log(req.body.password)
+        // console.log(req.body)
         try{
            let loginAdmin = await Admin.findOne({
                where : {
                    email : email
                }
            })
+        //    console.log(loginAdmin)
            let check = checkPass(password,loginAdmin.password)
+        //    console.log(check,'<<<<<<<<<<<<<')
            if(check){
                 let access_token = jwt.sign({
                     id:loginAdmin.id,
                     email : loginAdmin.email,
                     role: loginAdmin.role
                 },process.env.SECRET_KEY)
-                // console.log(access_token,'<<<<')
+                console.log(access_token,'<<<<')
                 res.status(200).json({access_token: access_token})
            }
            else{

@@ -196,17 +196,18 @@ Request Bodys
 Response (200 - access_token)
 
 
+
+
 GET /server
 Get all cart
 
 Request Header
-
-{
-  "access_token": "<your access token>"
-}
-Request Body
-
 not needed
+
+
+Request Body
+not needed
+
 Response (200)
 
 [
@@ -239,23 +240,28 @@ Request Header
 }
 Request Body
 
-{
-  "name": "<asset name>",
-  "imageUrl": "<asset imageUrl>",
-  "price": "<price>",
-  "stock": "<stock>"
-}
+[
+  {
+    "adminId": 1 ,
+    "productId: 1,
+    "amount":<amount product in cart>
+  }
+]
+
 Response (201 - Created)
 
-{
-  "id": <given id by system>,
-  "name": "<posted name>",
-    "imageUrl": "<asset imageUrl>",
-    "price": "<price>",
-    "stock": "<stock>"
+[
+  {
+    "id": "<given id by system>",
+    "adminId": 3 ,
+    "productId: 2,
+    "amount":"<amount product in cart>"
     "createdAt": "2020-03-20T07:15:12.149Z",
     "updatedAt": "2020-03-20T07:15:12.149Z",
-}
+  }
+]
+
+
 
 
 PUT /products/:id
